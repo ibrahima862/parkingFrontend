@@ -1,0 +1,53 @@
+
+/* ─────────────────────────────────────────────────────────
+   PALETTE — hex only, zéro oklch
+───────────────────────────────────────────────────────── */
+export const C = {
+    navy950:  '#060F2A',
+    navy900:  '#0D1B3E',
+    navy800:  '#12266A',
+    navy700:  '#0D2B6E',
+    navy600:  '#1A3A8F',
+    navy300:  '#7A9EE8',
+    navy200:  '#C5D0ED',
+    navy100:  '#DDE4F4',
+    navy50:   '#EEF2FB',
+    orange700:'#C2550A',
+    orange600:'#EA6C0C',
+    orange500:'#F97316',
+    orange400:'#FB923C',
+    orange100:'#FED7AA',
+    orange50: '#FFF4EE',
+    white:    '#FFFFFF',
+    bg:       '#F2F4FA',
+    surface:  '#FFFFFF',
+    border:   '#E6EAF5',
+    gray50:   '#F8F9FC',
+    gray100:  '#F0F2FA',
+    gray200:  '#E0E4F0',
+    gray300:  '#C2C9DF',
+    gray400:  '#8A93B2',
+    gray500:  '#626B8A',
+    gray900:  '#0E1229',
+    success:      '#059669',
+    successLight: '#ECFDF5',
+    successBorder:'#A7F3D0',
+    danger:       '#DC2626',
+    dangerLight:  '#FEF2F2',
+    dangerBorder: '#FECACA',
+    info:         '#2563EB',
+    infoLight:    '#EFF6FF',
+    infoBorder:   '#BFDBFE',
+};
+
+export const B = {
+    navy900: '#0D1B3E', navy700: '#0D2B6E', navy50: '#EEF2FB', navy100: '#DDE4F4',navy400: '#0A2463',
+    orange500: '#F97316', orange600: '#EA6C0C', orange50: '#FFF4EE', orange100: '#FED7AA',
+    white: '#FFFFFF', bg: '#F4F6FB', surface: '#FFFFFF', border: '#E8ECF5',
+    borderHover: '#C5D0ED', gray50: '#F8F9FC', gray100: '#F1F3F9', gray200: '#E2E6F0',
+    gray300: '#C8CEDF', gray400: '#9198B2', gray500: '#6B7399', gray900: '#0F1229',
+    success: '#059669', successLight: '#ECFDF5', successBorder: '#A7F3D0',
+    danger: '#DC2626', dangerLight: '#FEF2F2', dangerBorder: '#FECACA',
+    warn: '#D97706', warnLight: '#FFFBEB', warnBorder: '#FCD34D',
+    violet: '#7C3AED', violetLight: '#F5F3FF', violetBorder: '#DDD6FE',
+};

@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- 1. Ajout de class="notranslate" et translate="no" -->
+<html lang="fr" class="notranslate" translate="no">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 2. Meta pour bloquer explicitement Google Translate -->
+    <meta name="google" content="notranslate" />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- 3. Nettoyage du viewport (une seule ligne suffit) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    
+    <title>SenovaPark</title>
+  </head>
+  <body>
+    <!-- 4. Ajout du translate="no" ici aussi par sécurité -->
+    <div id="root" translate="no" class="notranslate"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
