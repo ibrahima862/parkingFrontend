@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { ArrowRight, MapPin} from 'lucide-react';
 
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiaWJyYWhpbWExMjMiLCJhIjoiY21udzlwOWZsMWFlbTJvczlwbjVrcDV0eiJ9.tfdxv0Td74JwVUqmqyQ6yg';
+const MAPBOX_TOKEN =""
 
 interface MapProps {
     items?: any[];
