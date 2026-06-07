@@ -3,48 +3,54 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowRight, Loader2, Eye, EyeOff, AlertCircle,
   CheckCircle2, ShieldCheck, Upload, X, ChevronLeft, ExternalLink,
+  MapPin, Car, User, Lock, Building2, FileText,
 } from "lucide-react";
 
-/* ─── Design tokens ──────────────────────────────────────────────────── */
+/* ─── Base input style ───────────────────────────────────────────────── */
 const inp =
-  "w-full py-3 px-4 text-[14px] bg-white border border-neutral-200 rounded-lg " +
-  "focus:outline-none focus:border-neutral-900 focus:ring-0 transition-colors " +
-  "placeholder:text-neutral-300 text-neutral-900";
+  "w-full py-3 px-4 text-[14px] bg-white border border-slate-200 rounded-xl " +
+  "focus:outline-none focus:border-slate-800 focus:ring-4 focus:ring-slate-100 " +
+  "transition-all placeholder:text-slate-300 text-slate-800 font-light";
 
-/* ─── Tiny helpers ───────────────────────────────────────────────────── */
+/* ─── Label ─────────────────────────────────────────────────────────── */
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-widest">
+    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.1em]">
       {children}
     </span>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+/* ─── Field ─────────────────────────────────────────────────────────── */
+function Field({ label, children, icon }: { label: string; children: React.ReactNode; icon?: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
-      <Label>{label}</Label>
+      <div className="flex items-center gap-2">
+        {icon && <span className="text-slate-300">{icon}</span>}
+        <Label>{label}</Label>
+      </div>
       {children}
     </div>
   );
 }
 
-function Divider({ label }: { label: string }) {
+/* ─── Section heading ────────────────────────────────────────────────── */
+function SectionHead({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle?: string }) {
   return (
-    <div className="flex items-center gap-3 my-1">
-      <div className="flex-1 h-px bg-neutral-100" />
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-widest whitespace-nowrap">
-        {label}
-      </span>
-      <div className="flex-1 h-px bg-neutral-100" />
+    <div className="flex items-start gap-4 pb-6 border-b border-slate-100">
+      <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shrink-0">
+        <span className="text-white">{icon}</span>
+      </div>
+      <div>
+        <p className="text-[15px] font-semibold text-slate-900">{title}</p>
+        {subtitle && <p className="text-[13px] text-slate-400 mt-0.5 font-light">{subtitle}</p>}
+      </div>
     </div>
   );
 }
 
 /* ─── CIN Upload zone ────────────────────────────────────────────────── */
-function CINZone({
-  label, file, onChange, onRemove,
-}: {
+function CINZone({ label, file, onChange, onRemove }: {
   label: string; file: File | null;
   onChange: (f: File) => void; onRemove: () => void;
 }) {
@@ -61,13 +67,13 @@ function CINZone({
         e.preventDefault(); setDrag(false);
         const f = e.dataTransfer.files[0]; if (f) onChange(f);
       }}
-      className={`relative h-44 rounded-xl border flex flex-col items-center justify-center gap-3 
+      className={`relative h-48 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-3
         cursor-pointer overflow-hidden transition-all duration-200
         ${file
-          ? "border-neutral-900 bg-neutral-50"
+          ? "border-slate-800 bg-slate-50"
           : drag
-            ? "border-neutral-400 bg-neutral-50"
-            : "border-neutral-200 bg-white hover:border-neutral-400 hover:bg-neutral-50"
+            ? "border-slate-500 bg-slate-50 scale-[1.01]"
+            : "border-slate-200 bg-white hover:border-slate-400 hover:bg-slate-50"
         }`}
     >
       <input ref={ref} type="file" accept="image/*" className="hidden"
@@ -75,29 +81,30 @@ function CINZone({
 
       {preview ? (
         <>
-          <img src={preview} alt={label}
-            className="absolute inset-0 w-full h-full object-cover rounded-xl" />
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center
-            opacity-0 hover:opacity-100 transition-opacity rounded-xl" />
+          <img src={preview} alt={label} className="absolute inset-0 w-full h-full object-cover rounded-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-2xl" />
+          <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <CheckCircle2 size={13} className="text-white" />
+            <span className="text-[12px] font-medium text-white">Photo ajoutée</span>
+          </div>
           <button
             type="button"
             onClick={e => { e.stopPropagation(); onRemove(); }}
-            className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full flex items-center
-              justify-center text-neutral-700 z-10 hover:bg-neutral-900 hover:text-white
-              transition-colors shadow-sm"
+            className="absolute top-3 right-3 w-7 h-7 bg-white rounded-full flex items-center
+              justify-center text-slate-700 z-10 hover:bg-red-500 hover:text-white
+              transition-all shadow-lg"
           >
             <X size={12} strokeWidth={2.5} />
           </button>
         </>
       ) : (
         <>
-          <div className="w-10 h-10 border border-neutral-200 rounded-xl flex items-center
-            justify-center bg-white">
-            <Upload size={16} className="text-neutral-500" strokeWidth={1.5} />
+          <div className="w-11 h-11 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center bg-slate-50">
+            <Upload size={16} className="text-slate-400" strokeWidth={1.5} />
           </div>
           <div className="text-center px-6">
-            <p className="text-[13px] font-medium text-neutral-700">{label}</p>
-            <p className="text-[11px] text-neutral-400 mt-0.5">Glissez ou cliquez</p>
+            <p className="text-[13px] font-semibold text-slate-700">{label}</p>
+            <p className="text-[11px] text-slate-400 mt-1 font-light">Glissez ou cliquez pour télécharger</p>
           </div>
         </>
       )}
@@ -105,7 +112,22 @@ function CINZone({
   );
 }
 
-/* ─── Main component ─────────────────────────────────────────────────── */
+/* ─── Step indicator (sidebar) ───────────────────────────────────────── */
+function StepItem({ n, label, active, done }: { n: string; label: string; active: boolean; done: boolean }) {
+  return (
+    <div className={`flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-300 ${active ? "bg-slate-900" : "bg-transparent"}`}>
+      <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-[11px] font-bold shrink-0 transition-all
+        ${done ? "bg-emerald-500 text-white" : active ? "bg-white text-slate-900" : "bg-slate-100 text-slate-400"}`}>
+        {done ? <CheckCircle2 size={14} strokeWidth={2.5} /> : n}
+      </div>
+      <span className={`text-[13px] font-medium transition-colors ${active ? "text-white" : done ? "text-slate-600" : "text-slate-400"}`}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Main ───────────────────────────────────────────────────────────── */
 export function BecomePartner() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -151,296 +173,353 @@ export function BecomePartner() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 font-sans">
+    <div className="min-h-screen bg-[#F7F7F8] font-sans">
 
-      {/* ── Top bar ── */}
-      <header className="border-b border-neutral-100 bg-white">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-[15px] font-semibold text-neutral-900 tracking-tight">
-            Senova<span className="text-neutral-400 font-light">Park</span>
-          </span>
-          <span className="text-[12px] text-neutral-400">
-            Espace partenaires
-          </span>
+      {/* ── Header ── */}
+      <header className="bg-white border-b border-slate-100 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-8 h-[64px] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center">
+              <Car size={15} className="text-white" strokeWidth={1.8} />
+            </div>
+            <span className="text-[15px] font-bold text-slate-900 tracking-tight">
+              Senova<span className="text-slate-400 font-light">Park</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-[12px] text-slate-400 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
+            <ShieldCheck size={12} strokeWidth={1.5} />
+            Espace partenaires sécurisé
+          </div>
         </div>
       </header>
 
-      {/* ── Page body ── */}
-      <main className="max-w-5xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-8 py-12">
 
-        {/* Page title */}
-        <div className="mb-14">
-          <p className="text-[11px] font-medium text-neutral-400 uppercase tracking-widest mb-3">
-            Devenir partenaire
-          </p>
-          <h1 className="text-[32px] font-semibold text-neutral-900 tracking-tight leading-tight">
-            Publiez votre parking
-          </h1>
-          <p className="text-[15px] text-neutral-500 mt-2 max-w-md leading-relaxed">
-            Rejoignez notre réseau de partenaires à Dakar et générez des revenus
-            depuis votre espace inutilisé.
-          </p>
+        {/* ── Hero strip ── */}
+        <div className="bg-slate-900 rounded-3xl px-10 py-10 mb-10 flex items-center justify-between overflow-hidden relative">
+          <div className="absolute right-0 top-0 w-64 h-full opacity-5"
+            style={{
+              background: "repeating-linear-gradient(45deg, white 0, white 1px, transparent 0, transparent 50%)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div>
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.12em] mb-3">
+              Programme Partenaires — Dakar
+            </p>
+            <h1 className="text-[28px] font-bold text-white tracking-tight leading-snug">
+              Publiez votre parking<br />
+              <span className="text-slate-400 font-light">et générez des revenus.</span>
+            </h1>
+          </div>
+          <div className="hidden lg:grid grid-cols-2 gap-3 shrink-0">
+            {[
+              { value: "100%", label: "Gratuit" },
+              { value: "24h", label: "Validation" },
+              { value: "0%", label: "Commission" },
+              { value: "24/7", label: "Support" },
+            ].map(s => (
+              <div key={s.label} className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-center">
+                <p className="text-[18px] font-bold text-white">{s.value}</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">{s.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 items-start">
 
-          {/* ── Left sidebar: steps ── */}
-          <div className="flex flex-col gap-2 lg:sticky lg:top-8">
-            {[
-              { n: "01", label: "Votre annonce" },
-              { n: "02", label: "Vérification" },
-              { n: "03", label: "Publication" },
-            ].map((s, i) => {
-              const done = step > i + 1;
-              const active = step === i + 1;
-              return (
-                <div key={s.n} className="flex items-center gap-3 py-2.5">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center 
-                      text-[11px] font-semibold shrink-0 transition-all
-                      ${done
-                        ? "bg-neutral-900 text-white"
-                        : active
-                          ? "bg-neutral-900 text-white"
-                          : "bg-neutral-100 text-neutral-400"
-                      }`}
-                  >
-                    {done ? <CheckCircle2 size={13} strokeWidth={2.5} /> : s.n}
-                  </div>
-                  <span
-                    className={`text-[13px] font-medium transition-colors
-                      ${active ? "text-neutral-900" : "text-neutral-400"}`}
-                  >
-                    {s.label}
-                  </span>
-                </div>
-              );
-            })}
-
-            {/* Progress bar */}
-            <div className="mt-6 h-1 bg-neutral-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-neutral-900 rounded-full transition-all duration-500"
-                style={{ width: step === 1 ? "33%" : step === 2 ? "66%" : "100%" }}
-              />
-            </div>
-            <p className="text-[11px] text-neutral-400 mt-2">
-              Étape {step} sur 2
+          {/* ── Sidebar ── */}
+          <div className="lg:sticky lg:top-[88px] flex flex-col gap-1 bg-white border border-slate-100 rounded-3xl p-4">
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.1em] px-4 pt-2 pb-3">
+              Progression
             </p>
+            <StepItem n="01" label="Votre annonce" active={step === 1} done={step > 1} />
+            <StepItem n="02" label="Vérification d'identité" active={step === 2} done={false} />
+            <StepItem n="03" label="Publication" active={false} done={false} />
 
-            {/* Reassurance block */}
-            <div className="mt-10 flex flex-col gap-4">
+            {/* Progress */}
+            <div className="px-4 pt-4 pb-2 mt-2">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] text-slate-400">Complété</span>
+                <span className="text-[11px] font-semibold text-slate-700">{step === 1 ? "33" : "66"}%</span>
+              </div>
+              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-slate-900 rounded-full transition-all duration-700 ease-out"
+                  style={{ width: step === 1 ? "33%" : "66%" }}
+                />
+              </div>
+            </div>
+
+            {/* Trust */}
+            <div className="mt-4 mx-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
               {[
                 { icon: CheckCircle2, text: "Inscription 100% gratuite" },
-                { icon: ShieldCheck, text: "Données sécurisées & confidentielles" },
+                { icon: ShieldCheck, text: "Données sécurisées" },
+                { icon: Car, text: "Mise en ligne sous 24h" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2.5">
-                  <Icon size={14} className="text-neutral-400 shrink-0" strokeWidth={1.5} />
-                  <span className="text-[12px] text-neutral-500">{text}</span>
+                  <Icon size={13} className="text-slate-400 shrink-0" strokeWidth={1.5} />
+                  <span className="text-[12px] text-slate-500 font-light">{text}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* ── Right: form card ── */}
-          <div className="bg-white border border-neutral-200 rounded-2xl p-8 sm:p-10">
+          {/* ── Form card ── */}
+          <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden">
 
+            {/* Card header */}
+            <div className="px-10 py-8 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <p className="text-[18px] font-bold text-slate-900">
+                  {step === 1 ? "Informations du parking" : "Vérification d'identité"}
+                </p>
+                <p className="text-[13px] text-slate-400 mt-0.5 font-light">
+                  {step === 1
+                    ? "Décrivez votre espace de stationnement"
+                    : "Téléchargez votre carte d'identité nationale"}
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500">
+                {step === 1 ? <Building2 size={18} strokeWidth={1.5} /> : <FileText size={18} strokeWidth={1.5} />}
+              </div>
+            </div>
+
+            {/* Error */}
             {error && (
-              <div className="flex items-center gap-2.5 px-4 py-3 bg-red-50 border
-                border-red-100 rounded-lg text-[13px] text-red-600 mb-8">
-                <AlertCircle size={14} className="shrink-0" />
+              <div className="mx-10 mt-8 flex items-center gap-3 px-4 py-3.5 bg-red-50 border border-red-100 rounded-2xl text-[13px] text-red-600 font-light">
+                <AlertCircle size={15} className="shrink-0 text-red-400" />
                 {error}
               </div>
             )}
 
-            {/* ── STEP 1 ── */}
-            {step === 1 && (
-              <form
-                onSubmit={e => { e.preventDefault(); setError(null); setStep(2); }}
-                className="flex flex-col gap-7"
-              >
-                {!token && (
-                  <>
-                    <Divider label="Votre compte" />
-                    <Field label="Nom complet">
-                      <input name="name" required placeholder="Matar Faye"
-                        value={form.name} onChange={set} className={inp} />
-                    </Field>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <Field label="Email">
-                        <input name="email" type="email" required
-                          placeholder="contact@email.com" value={form.email}
-                          onChange={set} className={inp} />
+            <div className="px-10 py-9">
+
+              {/* ── STEP 1 ── */}
+              {step === 1 && (
+                <form onSubmit={e => { e.preventDefault(); setError(null); setStep(2); }}
+                  className="flex flex-col gap-9">
+
+                  {!token && (
+                    <div className="flex flex-col gap-6">
+                      <SectionHead
+                        icon={<User size={16} strokeWidth={1.5} />}
+                        title="Informations personnelles"
+                        subtitle="Ces informations servent à créer votre compte partenaire"
+                      />
+                      <Field label="Nom complet" icon={<User size={12} />}>
+                        <input name="name" required placeholder="Matar Faye"
+                          value={form.name} onChange={set} className={inp} />
                       </Field>
-                      <Field label="Téléphone">
-                        <input name="telephone" type="tel" required
-                          placeholder="77 000 00 00" value={form.telephone}
-                          onChange={set} className={inp} />
-                      </Field>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <Field label="Mot de passe">
-                        <div className="relative">
-                          <input name="password" type={showPwd ? "text" : "password"}
-                            required placeholder="••••••••" value={form.password}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <Field label="Adresse email">
+                          <input name="email" type="email" required
+                            placeholder="contact@email.com" value={form.email}
                             onChange={set} className={inp} />
-                          <button type="button" onClick={() => setShowPwd(v => !v)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2
-                              text-neutral-400 hover:text-neutral-600 transition-colors">
-                            {showPwd ? <EyeOff size={14} /> : <Eye size={14} />}
-                          </button>
+                        </Field>
+                        <Field label="Téléphone">
+                          <input name="telephone" type="tel" required
+                            placeholder="77 000 00 00" value={form.telephone}
+                            onChange={set} className={inp} />
+                        </Field>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <Field label="Mot de passe" icon={<Lock size={12} />}>
+                          <div className="relative">
+                            <input name="password" type={showPwd ? "text" : "password"}
+                              required placeholder="••••••••" value={form.password}
+                              onChange={set} className={inp} />
+                            <button type="button" onClick={() => setShowPwd(v => !v)}
+                              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600 transition-colors">
+                              {showPwd ? <EyeOff size={14} /> : <Eye size={14} />}
+                            </button>
+                          </div>
+                        </Field>
+                        <Field label="Confirmation">
+                          <input name="password_confirmation" type="password" required
+                            placeholder="••••••••" value={form.password_confirmation}
+                            onChange={set} className={inp} />
+                        </Field>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-6">
+                    <SectionHead
+                      icon={<Car size={16} strokeWidth={1.5} />}
+                      title="Votre parking"
+                      subtitle="Renseignez les caractéristiques de votre espace"
+                    />
+
+                    <Field label="Nom du parking">
+                      <input name="nomParking" required placeholder="ex. Parking Teranga"
+                        value={form.nomParking} onChange={set} className={inp} />
+                    </Field>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <Field label="Quartier / Ville" icon={<MapPin size={12} />}>
+                        <input name="quartier" required placeholder="Dakar Plateau"
+                          value={form.quartier} onChange={set} className={inp} />
+                      </Field>
+                      <Field label="Nombre de places">
+                        <input name="capacite" type="number" required min="1"
+                          placeholder="10" value={form.capacite} onChange={set}
+                          className={inp} />
+                      </Field>
+                    </div>
+
+                    {/* Coordinates */}
+                    <div className="p-5 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col gap-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <MapPin size={13} className="text-slate-400" strokeWidth={1.5} />
+                          <span className="text-[12px] font-semibold text-slate-500 uppercase tracking-[0.1em]">
+                            Coordonnées GPS
+                          </span>
                         </div>
-                      </Field>
-                      <Field label="Confirmation">
-                        <input name="password_confirmation" type="password" required
-                          placeholder="••••••••" value={form.password_confirmation}
-                          onChange={set} className={inp} />
-                      </Field>
+                        <button
+                          type="button"
+                          onClick={() => window.open(`https://www.google.com/maps?q=${form.quartier}`, "_blank")}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-500
+                            hover:text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg
+                            transition-all hover:border-slate-400"
+                        >
+                          <ExternalLink size={10} strokeWidth={2} />
+                          Ouvrir Google Maps
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <Field label="Latitude">
+                          <input name="latitude" type="number" required
+                            placeholder="14.6937" value={form.latitude}
+                            onChange={set} className={inp} />
+                        </Field>
+                        <Field label="Longitude">
+                          <input name="longitude" type="number" required
+                            placeholder="-17.4441" value={form.longitude}
+                            onChange={set} className={inp} />
+                        </Field>
+                      </div>
                     </div>
-                  </>
-                )}
 
-                <Divider label="Votre parking" />
+                    <Field label="Description">
+                      <textarea name="description" rows={3}
+                        placeholder="Sécurité 24h, vidéosurveillance, accès facile, gardien sur place…"
+                        value={form.description} onChange={set}
+                        className={`${inp} resize-none`} />
+                    </Field>
+                  </div>
 
-                <Field label="Nom du parking">
-                  <input name="nomParking" required placeholder="Parking Teranga"
-                    value={form.nomParking} onChange={set} className={inp} />
-                </Field>
+                  {/* CTA */}
+                  <div className="flex flex-col gap-4 pt-2">
+                    <button type="submit"
+                      className="w-full flex items-center justify-center gap-2.5 py-4
+                        bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white text-[14px]
+                        font-semibold rounded-2xl transition-all tracking-wide">
+                      Continuer vers la vérification
+                      <ArrowRight size={15} strokeWidth={2.5} />
+                    </button>
+                    <p className="text-[11px] text-slate-400 text-center font-light">
+                      En continuant, vous acceptez les{" "}
+                      <a href="/conditions-partenaires" className="text-slate-700 underline underline-offset-2 hover:text-slate-900">
+                        Conditions Partenaires
+                      </a>.
+                    </p>
+                  </div>
+                </form>
+              )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Quartier / Ville">
-                    <input name="quartier" required placeholder="Dakar Plateau"
-                      value={form.quartier} onChange={set} className={inp} />
-                  </Field>
-                  <Field label="Nombre de places">
-                    <input name="capacite" type="number" required min="1"
-                      placeholder="10" value={form.capacite} onChange={set}
-                      className={inp} />
-                  </Field>
-                  <Field label="Latitude">
-                    <input name="latitude" type="number" required
-                      placeholder="14.6937" value={form.latitude}
-                      onChange={set} className={inp} />
-                  </Field>
-                  <Field label="Longitude">
-                    <input name="longitude" type="number" required
-                      placeholder="-17.4441" value={form.longitude}
-                      onChange={set} className={inp} />
-                  </Field>
-                </div>
+              {/* ── STEP 2 ── */}
+              {step === 2 && (
+                <form onSubmit={handleSubmit} className="flex flex-col gap-8">
 
-                <button
-                  type="button"
-                  onClick={() => window.open(`https://www.google.com/maps?q=${form.quartier}`, "_blank")}
-                  className="inline-flex items-center gap-2 text-[12px] text-neutral-500
-                    hover:text-neutral-900 transition-colors w-fit -mt-2"
-                >
-                  <ExternalLink size={12} strokeWidth={1.5} />
-                  Récupérer les coordonnées via Google Maps
-                </button>
-
-                <Field label="Description">
-                  <textarea name="description" rows={3}
-                    placeholder="Sécurité 24h, vidéosurveillance, accès facile…"
-                    value={form.description} onChange={set}
-                    className={`${inp} resize-none`} />
-                </Field>
-
-                {/* CTA */}
-                <div className="pt-2 flex flex-col gap-4">
-                  <button type="submit"
-                    className="w-full flex items-center justify-center gap-2 py-3.5
-                      bg-neutral-900 hover:bg-neutral-800 text-white text-[14px]
-                      font-medium rounded-xl transition-colors">
-                    Continuer <ArrowRight size={15} strokeWidth={2} />
+                  <button type="button" onClick={() => setStep(1)}
+                    className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-400
+                      hover:text-slate-900 transition-colors w-fit -mt-1">
+                    <ChevronLeft size={14} strokeWidth={2} /> Retour à l'annonce
                   </button>
-                  <p className="text-[11px] text-neutral-400 text-center">
-                    En continuant, vous acceptez les{" "}
-                    <a href="/conditions-partenaires"
-                      className="text-neutral-700 underline underline-offset-2">
-                      Conditions Partenaires
-                    </a>.
-                  </p>
-                </div>
-              </form>
-            )}
 
-            {/* ── STEP 2 ── */}
-            {step === 2 && (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-
-                <button type="button" onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-1.5 text-[13px] text-neutral-400
-                    hover:text-neutral-900 transition-colors w-fit -mt-1">
-                  <ChevronLeft size={14} /> Retour
-                </button>
-
-                <div>
-                  <h2 className="text-[16px] font-semibold text-neutral-900 mb-1">
-                    Vérification d'identité
-                  </h2>
-                  <p className="text-[13px] text-neutral-500 leading-relaxed">
-                    Téléchargez les deux faces de votre carte d'identité nationale (CIN).
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label>Recto</Label>
-                    <CINZone label="Face avant" file={cinRecto}
-                      onChange={setCinRecto} onRemove={() => setCinRecto(null)} />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label>Verso</Label>
-                    <CINZone label="Face arrière" file={cinVerso}
-                      onChange={setCinVerso} onRemove={() => setCinVerso(null)} />
-                  </div>
-                </div>
-
-                {/* Tips */}
-                <div className="flex flex-col gap-2.5 p-5 bg-neutral-50 border
-                  border-neutral-100 rounded-xl">
-                  <Label>Conseils</Label>
-                  {[
-                    "Photo nette et lisible",
-                    "Les 4 coins visibles",
-                    "Pas de reflet ni de flou",
-                  ].map(tip => (
-                    <div key={tip} className="flex items-center gap-2.5 mt-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-neutral-400 shrink-0" />
-                      <span className="text-[12px] text-neutral-600">{tip}</span>
+                  {/* CIN upload */}
+                  <div className="grid grid-cols-2 gap-5">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-lg bg-slate-900 flex items-center justify-center">
+                          <span className="text-[9px] font-bold text-white">R</span>
+                        </div>
+                        <Label>Face avant (Recto)</Label>
+                      </div>
+                      <CINZone label="Photo recto de votre CIN" file={cinRecto}
+                        onChange={setCinRecto} onRemove={() => setCinRecto(null)} />
                     </div>
-                  ))}
-                </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-lg bg-slate-600 flex items-center justify-center">
+                          <span className="text-[9px] font-bold text-white">V</span>
+                        </div>
+                        <Label>Face arrière (Verso)</Label>
+                      </div>
+                      <CINZone label="Photo verso de votre CIN" file={cinVerso}
+                        onChange={setCinVerso} onRemove={() => setCinVerso(null)} />
+                    </div>
+                  </div>
 
-                {/* Privacy note */}
-                <div className="flex items-start gap-3">
-                  <ShieldCheck size={14} className="text-neutral-400 shrink-0 mt-0.5"
-                    strokeWidth={1.5} />
-                  <p className="text-[12px] text-neutral-500 leading-relaxed">
-                    Vos documents sont utilisés uniquement pour la vérification.
-                    Ils ne seront jamais partagés avec des tiers.
-                  </p>
-                </div>
+                  {/* Photo tips */}
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { emoji: "🔍", text: "Photo nette et lisible" },
+                      { emoji: "📐", text: "Les 4 coins visibles" },
+                      { emoji: "💡", text: "Sans reflet ni flou" },
+                    ].map(tip => (
+                      <div key={tip.text} className="flex flex-col items-center gap-2 p-4 bg-slate-50 border border-slate-100 rounded-2xl text-center">
+                        <span className="text-xl">{tip.emoji}</span>
+                        <span className="text-[11px] text-slate-500 font-light leading-tight">{tip.text}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                {/* CTA */}
-                <button type="submit"
-                  disabled={loading || !cinRecto || !cinVerso}
-                  className="w-full flex items-center justify-center gap-2 py-3.5
-                    bg-neutral-900 hover:bg-neutral-800 text-white text-[14px]
-                    font-medium rounded-xl transition-colors
-                    disabled:opacity-40 disabled:cursor-not-allowed">
-                  {loading
-                    ? <><Loader2 size={14} className="animate-spin" /> Envoi en cours…</>
-                    : <>Soumettre ma demande <ArrowRight size={15} strokeWidth={2} /></>
-                  }
-                </button>
-              </form>
-            )}
+                  {/* Privacy */}
+                  <div className="flex items-start gap-3 p-5 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                    <ShieldCheck size={16} className="text-emerald-500 shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <p className="text-[12px] text-emerald-700 leading-relaxed font-light">
+                      Vos documents sont chiffrés et utilisés uniquement pour la vérification de votre identité.
+                      Ils ne seront jamais transmis à des tiers.
+                    </p>
+                  </div>
+
+                  {/* CTA */}
+                  <button type="submit"
+                    disabled={loading || !cinRecto || !cinVerso}
+                    className="w-full flex items-center justify-center gap-2.5 py-4
+                      bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white text-[14px]
+                      font-semibold rounded-2xl transition-all tracking-wide
+                      disabled:opacity-30 disabled:cursor-not-allowed disabled:scale-100">
+                    {loading
+                      ? <><Loader2 size={14} className="animate-spin" /> Envoi en cours…</>
+                      : <>Soumettre ma demande <ArrowRight size={15} strokeWidth={2.5} /></>
+                    }
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
+
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="max-w-6xl mx-auto px-8 py-8 mt-4 flex items-center justify-between border-t border-slate-200">
+        <span className="text-[12px] text-slate-400">© 2024 SenovaPark · Tous droits réservés</span>
+        <div className="flex items-center gap-5">
+          {["Confidentialité", "Conditions", "Contact"].map(l => (
+            <a key={l} href="#" className="text-[12px] text-slate-400 hover:text-slate-700 transition-colors font-light">{l}</a>
+          ))}
+        </div>
+      </footer>
+
     </div>
   );
 }
+
 export default BecomePartner;
